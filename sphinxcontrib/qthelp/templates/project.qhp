@@ -10,7 +10,7 @@
         <filterAttribute>{{ outname|e }}</filterAttribute>
         <filterAttribute>{{ version|e }}</filterAttribute>
         <toc>
-            <section title="{{ title|e }}" ref="{{ master_doc|e }}.html">
+            <section title="{{ title|e }}" ref="{{ master_doc|e }}">
 {{ sections }}
             </section>
         </toc>

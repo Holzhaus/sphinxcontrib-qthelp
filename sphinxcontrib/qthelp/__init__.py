@@ -78,8 +78,11 @@ class QtHelpBuilder(StandaloneHTMLBuilder):
     def init(self) -> None:
         super().init()
         # the output files for HTML help must be .html only
-        self.out_suffix = '.html'
-        self.link_suffix = '.html'
+        if self.config.qthelp_language_suffix:
+            self.out_suffix = '.%s.html' % self.config.language
+        else:
+            self.out_suffix = '.html'
+        self.link_suffix = self.out_suffix
         # self.config.html_style = 'traditional.css'
 
     def get_theme_config(self) -> Tuple[str, Dict]:
@@ -135,7 +138,7 @@ class QtHelpBuilder(StandaloneHTMLBuilder):
             body = render_file('project.qhp', outname=outname,
                                title=self.config.html_title, version=self.config.version,
                                project=self.config.project, namespace=nspace,
-                               master_doc=self.config.master_doc,
+                               master_doc=''.join((self.config.master_doc, self.link_suffix)),
                                sections=sections, keywords=keywords,
                                files=self.get_project_files(outdir))
             f.write(body)
@@ -268,6 +271,7 @@ def setup(app: Sphinx) -> Dict[str, Any]:
     app.add_config_value('qthelp_namespace', None, 'html', [str])
     app.add_config_value('qthelp_theme', 'nonav', 'html')
     app.add_config_value('qthelp_theme_options', {}, 'html')
+    app.add_config_value('qthelp_language_suffix', False, 'html')
 
     return {
         'version': __version__,
